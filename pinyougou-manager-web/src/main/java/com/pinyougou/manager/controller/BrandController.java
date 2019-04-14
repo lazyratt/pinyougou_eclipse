@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbBrand;
-import com.pinyougou.sellergoods.service.BrandService;
-
-import entity.PageResult;
-import entity.Result;
+import com.pinyougou.sellergoods.service.*;
+import entity.*;
 
 @RestController
 @RequestMapping("/brand")
@@ -92,4 +90,10 @@ public class BrandController {
 		}
 	}
 	
+	
+	@RequestMapping("/search")
+	public PageResult search(@RequestBody TbBrand brand,int page, int size) {
+		System.out.println("findPage方法执行了"+brand);
+		return brandService.findPage(brand,page, size);
+	}
 }

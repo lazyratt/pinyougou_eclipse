@@ -27,11 +27,11 @@
 	app.controller('brandController', function($scope, $http) {
 
 		//查询所有品牌信息
-		$scope.findAll = function() {
-			$http.get("../brand/findAll.do").success(function(data) {
-				$scope.list = data;
-			});
-		}
+// 		$scope.findAll = function() {
+// 			$http.get("../brand/findAll.do").success(function(data) {
+// 				$scope.list = data;
+// 			});
+// 		}
 
 		//分页控件配置
 		$scope.paginationConf = {
@@ -46,27 +46,27 @@
 
 		//重新加载列表
 		$scope.reloadList = function() {
-			$scope.findPage($scope.paginationConf.currentPage,
+			$scope.search($scope.paginationConf.currentPage,
 					$scope.paginationConf.itemsPerPage);
 		}
 
-		//查询品牌列表
-		$scope.findPage = function(page, size) {
-			$http.get("../brand/findPage.do?page=" + page + "&size=" + size)
-					.success(function(data) {
-						$scope.list = data.rows;//当前页数据
-						$scope.paginationConf.totalItems = data.total;//更新总记录数
-					});
-		}
+// 		//查询品牌列表
+// 		$scope.findPage = function(page, size) {
+// 			$http.post("../brand/findPage.do?page=" + page + "&size=" +size,$scope.searchEntity)
+// 					.success(function(data) {
+// 						$scope.list = data.rows;//当前页数据
+// 						$scope.paginationConf.totalItems = data.total;//更新总记录数
+// 					});
+// 		}
 
 		//添加品牌
 		$scope.save = function() {
 			var methodName = "save";
-			if($scope.entity.id != null){
+			if ($scope.entity.id != null) {
 				methodName = "update";
 			}
-			$http.post("../brand/"+methodName+".do", $scope.entity).success(
-					function(data) {
+			$http.post("../brand/" + methodName + ".do", $scope.entity)
+					.success(function(data) {
 						//如果添加成功，重新加载页面,添加失败弹出提示框
 						if (data.success) {
 							$scope.reloadList();
@@ -83,36 +83,47 @@
 				$scope.entity = data;
 			});
 		}
-		
+
 		//选择删除功能
-		$scope.selectIds=[];//选择复选框的id集合 
+		$scope.selectIds = [];//选择复选框的id集合 
 		//选择复选框，将id添加到数组中，取消复选框，将id从数组中删除
-		$scope.updateSelect=function($event,id){
+		$scope.updateSelect = function($event, id) {
 			//判断是否选中
-			if($event.target.checked){
+			if ($event.target.checked) {
 				//选中
 				$scope.selectIds.push(id);
 			} else {
 				//取消选中
 				var index = $scope.selectIds.indexOf(id);//获取id对应的坐标位置
 				//从集合中删除id
-				$scope.selectIds.splice(index,1);
+				$scope.selectIds.splice(index, 1);
 			}
 		}
 		//点击删除发送请求
-		$scope.dele=function(){
+		$scope.dele = function() {
 			alert($scope.selectIds);
-			$http.get("../brand/delete.do?ids="+$scope.selectIds).success(function(data){
-				//删除成功，重新刷新列表
-				if(data.success){
-					$scope.reloadList();
-				} else{
-					//删除失败提示
-					alert(data.message);
-				}
-			});
+			$http.get("../brand/delete.do?ids=" + $scope.selectIds).success(
+					function(data) {
+						//删除成功，重新刷新列表
+						if (data.success) {
+							$scope.reloadList();
+						} else {
+							//删除失败提示
+							alert(data.message);
+						}
+					});
 		}
 		
+		//查条件查询
+		$scope.searchEntity={};
+		$scope.search = function(page, size) {
+			$http.post("../brand/search.do?page=" + page + "&size=" +size,$scope.searchEntity)
+					.success(function(data) {
+						$scope.list = data.rows;//当前页数据
+						$scope.paginationConf.totalItems = data.total;//更新总记录数
+					});
+		}
+
 	});
 </script>
 
@@ -137,8 +148,9 @@
 							data-toggle="modal" data-target="#editModal" ng-click="entity={}">
 							<i class="fa fa-file-o"></i> 新建
 						</button>
-						<button type="button" class="btn btn-default" title="删除" ng-click="dele()">
-							<i class="fa fa-trash-o" ></i> 删除
+						<button type="button" class="btn btn-default" title="删除"
+							ng-click="dele()">
+							<i class="fa fa-trash-o"></i> 删除
 						</button>
 						<button type="button" class="btn btn-default" title="刷新"
 							onclick="window.location.reload();">
@@ -147,6 +159,16 @@
 					</div>
 				</div>
 			</div>
+
+			<!--查询框 -->
+			<div class="box-tools pull-right">
+				<div class="has-feedback">
+					品牌名称:<input ng-model="searchEntity.name"> 品牌首字母:<input
+						ng-model="searchEntity.firstChar">
+					<button class="btn btn-default" ng-click="reloadList()">查询</button>
+				</div>
+			</div>
+
 			<div class="box-tools pull-right">
 				<div class="has-feedback"></div>
 			</div>
@@ -168,7 +190,8 @@
 				<tbody>
 
 					<tr ng-repeat="entity in list">
-						<td><input type="checkbox" ng-click="updateSelect($event,entity.id)"></td>
+						<td><input type="checkbox"
+							ng-click="updateSelect($event,entity.id)"></td>
 						<td>{{entity.id}}</td>
 						<td>{{entity.name}}</td>
 						<td>{{entity.firstChar}}</td>

@@ -9,6 +9,8 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.pinyougou.mapper.TbBrandMapper;
 import com.pinyougou.pojo.TbBrand;
+import com.pinyougou.pojo.TbBrandExample;
+import com.pinyougou.pojo.TbBrandExample.Criteria;
 import com.pinyougou.sellergoods.service.BrandService;
 
 import entity.PageResult;
@@ -26,9 +28,8 @@ public class BrandServiceImpl implements BrandService {
 		return brandMapper.selectByExample(null);
 	}
 	
-	/**
-	 * 查询当前页的数据
-	 */
+	
+	
 	@Override
 	public PageResult findPage(int pageNum, int pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
@@ -36,6 +37,29 @@ public class BrandServiceImpl implements BrandService {
 		PageResult pageResult = new PageResult(page.getTotal(), page.getResult());
 		return pageResult;
 	}
+	
+	/**
+	 * 查询当前页的数据
+	 */
+	@Override
+	public PageResult findPage(TbBrand brand,int pageNum, int pageSize) {
+		PageHelper.startPage(pageNum, pageSize);
+		//创建Brand条件查询对象
+		TbBrandExample tbBrandExample = new TbBrandExample();
+		Criteria criteria = tbBrandExample.createCriteria();
+		if (brand != null ) {
+			if (brand.getName() != null && brand.getName().length() >0) {
+				criteria.andNameLike("%"+brand.getName()+"%");
+			}
+			if (brand.getFirstChar() != null && brand.getFirstChar().length() >0) {
+				criteria.andFirstCharEqualTo(brand.getFirstChar());
+			}
+		}
+		
+		Page<TbBrand> page = (Page<TbBrand>) brandMapper.selectByExample(tbBrandExample);
+		PageResult pageResult = new PageResult(page.getTotal(), page.getResult());
+		return pageResult;
+	}		
 
 	/**
 	 * 添加品牌
@@ -72,5 +96,7 @@ public class BrandServiceImpl implements BrandService {
 			brandMapper.deleteByPrimaryKey(id);
 		}
 	}
+
+	
 
 }

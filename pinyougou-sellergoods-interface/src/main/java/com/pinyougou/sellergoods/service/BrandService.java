@@ -19,13 +19,23 @@ public interface BrandService {
 	 */
 	List<TbBrand> findAll();
 	
+	
 	/**
-	 * 
-	 * @param pageNum 当前页码数
-	 * @param pageSize 页码显示条数
+	 * 分页查询
+	 * @param page
+	 * @param size
 	 * @return
 	 */
-	PageResult findPage(int pageNum,int pageSize);
+	PageResult findPage(int page, int size);
+	
+	/**
+	 * 条件查询
+	 * @param tbBrand
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	PageResult findPage(TbBrand tbBrand,int pageNum,int pageSize);
 
 	/**
 	 * 添加品牌
@@ -51,4 +61,6 @@ public interface BrandService {
 	 * @param ids
 	 */
 	void deleteByIds(String[] ids);
+
+	
 }
