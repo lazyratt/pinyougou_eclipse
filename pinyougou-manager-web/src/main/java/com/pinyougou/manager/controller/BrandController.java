@@ -20,6 +20,10 @@ public class BrandController {
 	@Reference
 	private BrandService brandService;
 
+	/**
+	 * 查询所有品牌信息
+	 * @return
+	 */
 	@RequestMapping("findAll")
 	public List<TbBrand> findAll() {
 		System.out.println("findAll方法执行了");
@@ -27,9 +31,9 @@ public class BrandController {
 	}
 
 	/**
-	 * 分页查询
-	 * @param page
-	 * @param size
+	 * 分页查询品牌信息
+	 * @param page 当前页码数
+	 * @param size 当前页码显示的条数
 	 * @return
 	 */
 	@RequestMapping("findPage")
@@ -38,6 +42,11 @@ public class BrandController {
 		return brandService.findPage(page, size);
 	}
 	
+	/**
+	 * 添加品牌信息
+	 * @param brand 品牌信息
+	 * @return
+	 */
 	@RequestMapping("/save")
 	public Result save(@RequestBody TbBrand brand) {
 		try {
@@ -46,6 +55,28 @@ public class BrandController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new Result(false,"添加失败");
+		}
+	}
+	
+	@RequestMapping("/findById")
+	public TbBrand findById(long id) {
+		System.out.println("findById执行了         id:"+id);
+		return brandService.findById(id);
+	}
+	
+	/**
+	 * 修改品牌信息
+	 * @param tbBrand
+	 * @return
+	 */
+	@RequestMapping("/update")
+	public Result update(@RequestBody TbBrand tbBrand) {
+		try {
+			brandService.update(tbBrand);
+			return new Result(true,"修改成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result(false,"修改失败");
 		}
 	}
 	

@@ -23,55 +23,68 @@
 <!-- 分页组件结束 -->
 
 <script type="text/javascript">
-	var app=angular.module('pinyougou',['pagination']);
-	app.controller('brandController',function($scope,$http){
-		
+	var app = angular.module('pinyougou', [ 'pagination' ]);
+	app.controller('brandController', function($scope, $http) {
+
 		//查询所有品牌信息
-		$scope.findAll=function(){
-			$http.get("../brand/findAll.do").success(
-				function(data){
-    				$scope.list=data;
-    		    }
-			);
+		$scope.findAll = function() {
+			$http.get("../brand/findAll.do").success(function(data) {
+				$scope.list = data;
+			});
 		}
-		
+
 		//分页控件配置
 		$scope.paginationConf = {
-		currentPage: 1,
-		totalItems: 10,
-		itemsPerPage: 10,
-		perPageOptions: [10, 20, 30, 40, 50],
-		onChange: function(){
+			currentPage : 1,
+			totalItems : 10,
+			itemsPerPage : 10,
+			perPageOptions : [ 10, 20, 30, 40, 50 ],
+			onChange : function() {
 				$scope.reloadList();
 			}
 		};
-		
+
 		//重新加载列表
-		$scope.reloadList=function(){
-			$scope.findPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+		$scope.reloadList = function() {
+			$scope.findPage($scope.paginationConf.currentPage,
+					$scope.paginationConf.itemsPerPage);
 		}
-		
-	 	//查询品牌列表
-		$scope.findPage=function(page,size){
-	 		$http.get("../brand/findPage.do?page="+page+"&size="+size).success(function(data){
-	 			$scope.list=data.rows;//当前页数据
-	 			$scope.paginationConf.totalItems=data.total;//更新总记录数
-	 		});
-	 	}
-	 	
-	 	//添加品牌
-	 	$scope.save=function(){
-	 		$http.post("../brand/save.do",$scope.entity).success(function(data){
-	 			//如果添加成功，重新加载页面,添加失败弹出提示框
-	 			if(data.success){
-	 				$scope.reloadList();
-	 			} else{
-	 				alert(data.message);
-	 			}
-	 		});
-	 	}
+
+		//查询品牌列表
+		$scope.findPage = function(page, size) {
+			$http.get("../brand/findPage.do?page=" + page + "&size=" + size)
+					.success(function(data) {
+						$scope.list = data.rows;//当前页数据
+						$scope.paginationConf.totalItems = data.total;//更新总记录数
+					});
+		}
+
+		//添加品牌
+		$scope.save = function() {
+			var methodName = "save";
+			if($scope.entity.id != null){
+				methodName = "update";
+			}
+			$http.post("../brand/"+methodName+".do", $scope.entity).success(
+					function(data) {
+						//如果添加成功，重新加载页面,添加失败弹出提示框
+						if (data.success) {
+							$scope.reloadList();
+						} else {
+							alert(data.message);
+						}
+					});
+
+		}
+
+		//根据id查询品牌
+		$scope.findById = function(id) {
+			$http.post("../brand/findById.do?id=" + id).success(function(data) {
+				$scope.entity = data;
+			});
+		}
 	});
-    </script>
+</script>
 
 </head>
 <body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou"
@@ -124,14 +137,15 @@
 				</thead>
 				<tbody>
 
-					<tr ng-repeat="brand in list">
+					<tr ng-repeat="entity in list">
 						<td><input type="checkbox"></td>
-						<td>{{brand.id}}</td>
-						<td>{{brand.name}}</td>
-						<td>{{brand.firstChar}}</td>
+						<td>{{entity.id}}</td>
+						<td>{{entity.name}}</td>
+						<td>{{entity.firstChar}}</td>
 						<td class="text-center">
 							<button type="button" class="btn bg-olive btn-xs"
-								data-toggle="modal" data-target="#editModal" >修改</button>
+								data-toggle="modal" data-target="#editModal"
+								ng-click="findById(entity.id)">修改</button>
 						</td>
 					</tr>
 
@@ -164,12 +178,13 @@
 					<table class="table table-bordered table-striped" width="800px">
 						<tr>
 							<td>品牌名称</td>
-							<td><input class="form-control" placeholder="品牌名称" ng-model="entity.name">
-							</td>
+							<td><input class="form-control" placeholder="品牌名称"
+								ng-model="entity.name"></td>
 						</tr>
 						<tr>
 							<td>首字母</td>
-							<td><input class="form-control" placeholder="首字母" ng-model="entity.firstChar"></td>
+							<td><input class="form-control" placeholder="首字母"
+								ng-model="entity.firstChar"></td>
 						</tr>
 					</table>
 				</div>

@@ -45,4 +45,21 @@ public class BrandServiceImpl implements BrandService {
 		brandMapper.insert(brand);	
 	}
 
+	/**
+	 * 修改品牌
+	 */
+	@Override
+	public void update(TbBrand tbBrand) {
+		brandMapper.updateByPrimaryKey(tbBrand);
+		
+	}
+
+	/**
+	 * 根据id查询
+	 */
+	@Override
+	public TbBrand findById(long id) {
+		return brandMapper.selectByPrimaryKey(id);
+	}
+
 }
