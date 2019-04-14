@@ -80,4 +80,15 @@ public class BrandController {
 		}
 	}
 	
+	
+	public Result delete(long[] ids) {
+		try {
+			brandService.deleteByIds(ids);
+			return new Result(true,"删除成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result(false,"删除失败");
+		}
+	}
+	
 }

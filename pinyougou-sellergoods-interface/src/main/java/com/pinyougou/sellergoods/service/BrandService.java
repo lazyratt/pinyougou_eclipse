@@ -45,4 +45,10 @@ public interface BrandService {
 	 * @return
 	 */
 	TbBrand findById(long id);
+
+	/**
+	 * 根据id批量删除品牌
+	 * @param ids
+	 */
+	void deleteByIds(long[] ids);
 }

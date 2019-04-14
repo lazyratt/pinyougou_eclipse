@@ -62,4 +62,14 @@ public class BrandServiceImpl implements BrandService {
 		return brandMapper.selectByPrimaryKey(id);
 	}
 
+	/**
+	 * 删除
+	 */
+	@Override
+	public void deleteByIds(long[] ids) {
+		for (long id : ids) {
+			brandMapper.deleteByPrimaryKey(id);
+		}
+	}
+
 }
