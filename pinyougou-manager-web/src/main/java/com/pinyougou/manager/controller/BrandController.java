@@ -81,7 +81,8 @@ public class BrandController {
 	}
 	
 	
-	public Result delete(long[] ids) {
+	@RequestMapping("/delete")
+	public Result delete(String[] ids) {
 		try {
 			brandService.deleteByIds(ids);
 			return new Result(true,"删除成功");

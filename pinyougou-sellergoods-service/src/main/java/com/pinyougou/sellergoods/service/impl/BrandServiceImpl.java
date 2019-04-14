@@ -66,8 +66,9 @@ public class BrandServiceImpl implements BrandService {
 	 * 删除
 	 */
 	@Override
-	public void deleteByIds(long[] ids) {
-		for (long id : ids) {
+	public void deleteByIds(String[] ids) {
+		for (String idStr : ids) {
+			long id = Long.parseLong(idStr);
 			brandMapper.deleteByPrimaryKey(id);
 		}
 	}

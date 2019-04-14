@@ -89,9 +89,30 @@
 		//选择复选框，将id添加到数组中，取消复选框，将id从数组中删除
 		$scope.updateSelect=function($event,id){
 			//判断是否选中
-			if
-		
+			if($event.target.checked){
+				//选中
+				$scope.selectIds.push(id);
+			} else {
+				//取消选中
+				var index = $scope.selectIds.indexOf(id);//获取id对应的坐标位置
+				//从集合中删除id
+				$scope.selectIds.splice(index,1);
+			}
 		}
+		//点击删除发送请求
+		$scope.dele=function(){
+			alert($scope.selectIds);
+			$http.get("../brand/delete.do?ids="+$scope.selectIds).success(function(data){
+				//删除成功，重新刷新列表
+				if(data.success){
+					$scope.reloadList();
+				} else{
+					//删除失败提示
+					alert(data.message);
+				}
+			});
+		}
+		
 	});
 </script>
 
@@ -116,8 +137,8 @@
 							data-toggle="modal" data-target="#editModal" ng-click="entity={}">
 							<i class="fa fa-file-o"></i> 新建
 						</button>
-						<button type="button" class="btn btn-default" title="删除">
-							<i class="fa fa-trash-o"></i> 删除
+						<button type="button" class="btn btn-default" title="删除" ng-click="dele()">
+							<i class="fa fa-trash-o" ></i> 删除
 						</button>
 						<button type="button" class="btn btn-default" title="刷新"
 							onclick="window.location.reload();">
@@ -147,7 +168,7 @@
 				<tbody>
 
 					<tr ng-repeat="entity in list">
-						<td><input type="checkbox"></td>
+						<td><input type="checkbox" ng-click="updateSelect($event,entity.id)"></td>
 						<td>{{entity.id}}</td>
 						<td>{{entity.name}}</td>
 						<td>{{entity.firstChar}}</td>
