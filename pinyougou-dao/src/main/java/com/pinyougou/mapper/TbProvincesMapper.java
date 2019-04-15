@@ -10,7 +10,7 @@ public interface TbProvincesMapper {
 
     int deleteByExample(TbProvincesExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(TbProvinces record);
 
@@ -18,7 +18,7 @@ public interface TbProvincesMapper {
 
     List<TbProvinces> selectByExample(TbProvincesExample example);
 
-    TbProvinces selectByPrimaryKey(Integer id);
+    TbProvinces selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("record") TbProvinces record, @Param("example") TbProvincesExample example);
 
