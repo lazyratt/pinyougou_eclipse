@@ -22,10 +22,110 @@
 <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
 <!-- 分页组件结束 -->
 
-<script src="../js/base_pagination.js"></script>
-<script src="../js/service/brandService.js"></script>
-<script src="../js/controller/baseController.js"></script>
-<script src="../js/controller/brandController.js"></script>
+<script type="text/javascript">
+	var app = angular.module('pinyougou', [ 'pagination' ]);
+	app.controller('brandController', function($scope, $http) {
+
+		//查询所有品牌信息
+// 		$scope.findAll = function() {
+// 			$http.get("../brand/findAll.do").success(function(data) {
+// 				$scope.list = data;
+// 			});
+// 		}
+
+		//分页控件配置
+		$scope.paginationConf = {
+			currentPage : 1,
+			totalItems : 10,
+			itemsPerPage : 10,
+			perPageOptions : [ 10, 20, 30, 40, 50 ],
+			onChange : function() {
+				$scope.reloadList();
+			}
+		};
+
+		//重新加载列表
+		$scope.reloadList = function() {
+			$scope.search($scope.paginationConf.currentPage,
+					$scope.paginationConf.itemsPerPage);
+		}
+
+// 		//查询品牌列表
+// 		$scope.findPage = function(page, size) {
+// 			$http.post("../brand/findPage.do?page=" + page + "&size=" +size,$scope.searchEntity)
+// 					.success(function(data) {
+// 						$scope.list = data.rows;//当前页数据
+// 						$scope.paginationConf.totalItems = data.total;//更新总记录数
+// 					});
+// 		}
+
+		//添加品牌
+		$scope.save = function() {
+			var methodName = "save";
+			if ($scope.entity.id != null) {
+				methodName = "update";
+			}
+			$http.post("../brand/" + methodName + ".do", $scope.entity)
+					.success(function(data) {
+						//如果添加成功，重新加载页面,添加失败弹出提示框
+						if (data.success) {
+							$scope.reloadList();
+						} else {
+							alert(data.message);
+						}
+					});
+
+		}
+
+		//根据id查询品牌
+		$scope.findById = function(id) {
+			$http.post("../brand/findById.do?id=" + id).success(function(data) {
+				$scope.entity = data;
+			});
+		}
+
+		//选择删除功能
+		$scope.selectIds = [];//选择复选框的id集合 
+		//选择复选框，将id添加到数组中，取消复选框，将id从数组中删除
+		$scope.updateSelect = function($event, id) {
+			//判断是否选中
+			if ($event.target.checked) {
+				//选中
+				$scope.selectIds.push(id);
+			} else {
+				//取消选中
+				var index = $scope.selectIds.indexOf(id);//获取id对应的坐标位置
+				//从集合中删除id
+				$scope.selectIds.splice(index, 1);
+			}
+		}
+		//点击删除发送请求
+		$scope.dele = function() {
+			alert($scope.selectIds);
+			$http.get("../brand/delete.do?ids=" + $scope.selectIds).success(
+					function(data) {
+						//删除成功，重新刷新列表
+						if (data.success) {
+							$scope.reloadList();
+						} else {
+							//删除失败提示
+							alert(data.message);
+						}
+					});
+		}
+		
+		//查条件查询
+		$scope.searchEntity={};
+		$scope.search = function(page, size) {
+			$http.post("../brand/search.do?page=" + page + "&size=" +size,$scope.searchEntity)
+					.success(function(data) {
+						$scope.list = data.rows;//当前页数据
+						$scope.paginationConf.totalItems = data.total;//更新总记录数
+					});
+		}
+
+	});
+</script>
 
 </head>
 <body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou"
