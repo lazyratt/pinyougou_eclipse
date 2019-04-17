@@ -28,5 +28,10 @@ app.service('specificationService',function($http){
 	//搜索
 	this.search=function(page,rows,searchEntity){
 		return $http.post('../specification/search.do?page='+page+"&rows="+rows, searchEntity);
-	}    	
+	}  
+	
+	//查询
+	this.selectSpecList=function(){
+		return $http.get("../specification/selectSpecList.do");
+	}
 });

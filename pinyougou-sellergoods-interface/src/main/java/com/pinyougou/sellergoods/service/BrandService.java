@@ -1,6 +1,7 @@
 package com.pinyougou.sellergoods.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.pinyougou.pojo.TbBrand;
 
@@ -62,5 +63,10 @@ public interface BrandService {
 	 */
 	void deleteByIds(String[] ids);
 
+	/**
+	 * 查询品牌信息(模板功能用)
+	 * @return
+	 */
+	List<Map> selectOptionList();
 	
 }

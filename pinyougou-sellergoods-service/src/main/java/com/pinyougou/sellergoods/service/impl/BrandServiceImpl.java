@@ -1,6 +1,7 @@
 package com.pinyougou.sellergoods.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -95,6 +96,13 @@ public class BrandServiceImpl implements BrandService {
 			long id = Long.parseLong(idStr);
 			brandMapper.deleteByPrimaryKey(id);
 		}
+	}
+
+
+
+	@Override
+	public List<Map> selectOptionList() {
+		return brandMapper.selectOptionList();
 	}
 
 	

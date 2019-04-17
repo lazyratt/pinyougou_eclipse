@@ -1,5 +1,6 @@
 package com.pinyougou.manager.controller;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -112,4 +113,9 @@ public class SpecificationController {
 		return specificationService.findPage(specification, page, rows);		
 	}
 	
+	
+	@RequestMapping("/selectSpecList")
+	public List<Map> selectSpecList(){
+		return specificationService.selectSpecList();
+	}
 }

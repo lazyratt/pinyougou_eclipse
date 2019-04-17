@@ -29,4 +29,7 @@
 			return $http.post("../brand/search.do?page=" + page + "&size=" +size,searchEntity);
 		}
 		
+		this.selectOptionList=function(){
+			return $http.get("../brand/selectOptionList.do");
+		}
 	});

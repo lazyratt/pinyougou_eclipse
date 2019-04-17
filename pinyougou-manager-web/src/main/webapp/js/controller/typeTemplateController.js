@@ -1,5 +1,5 @@
  //控制层 
-app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemplateService){	
+app.controller('typeTemplateController' ,function($scope,$controller,typeTemplateService,brandService,specificationService){	
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -22,11 +22,17 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 		);
 	}
 	
+	
+	
 	//查询实体 
 	$scope.findOne=function(id){				
 		typeTemplateService.findOne(id).success(
 			function(response){
-				$scope.entity= response;					
+				$scope.entity= response;	
+				$scope.entity.brandIds= JSON.parse($scope.entity.brandIds);//把字符串转化成json对象
+				$scope.entity.specIds= JSON.parse($scope.entity.specIds);//把字符串转化成json对象
+				$scope.entity.customAttributeItems= JSON.parse($scope.entity.customAttributeItems);//把字符串转化成json对象
+				
 			}
 		);				
 	}
@@ -76,5 +82,34 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 			}			
 		);
 	}
-    
+	
+	
+	$scope.brandList={data:[]};//品牌列表
+	
+	//读取品牌列表
+	$scope.findBrandList=function(){
+		brandService.selectOptionList().success(
+			function(response){
+				$scope.brandList={data:response};
+			}
+		);		
+	}
+	
+	$scope.specList={data:[]};//规格列表
+	//读取规格列表
+	$scope.findSpecList=function(){
+		specificationService.selectSpecList().success(function(response){
+			$scope.specList={data:response};
+		});
+	}
+	
+	//增加行
+	$scope.addTableRow=function(){
+		$scope.entity.customAttributeItems.push({});
+	}
+	
+	//删除行
+	$scope.delTableRow=function(index){
+		$scope.entity.customAttributeItems.splice(index,1);
+	}
 });	
