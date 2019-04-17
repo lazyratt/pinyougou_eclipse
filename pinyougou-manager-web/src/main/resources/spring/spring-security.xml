@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<!-- 配置静态资源文件过滤 -->
+	<http pattern="/login.html" security="none"></http>
+	<http pattern="/css/**" security="none"></http>
+	<http pattern="/img/**" security="none"></http>
+	<http pattern="/js/**" security="none"></http>
+	<http pattern="/plugins/**" security="none"></http>
+	
+	<!-- 页面拦截规则 -->
+	<http use-expressions="false">
+	
+		<!-- 拦截路径：/*所有,需要角色：ADMIN -->
+		<intercept-url pattern="/*" access="ROLE_ADMIN"/>
+		
+		<!-- always-use-default-target：指定了是否在身份验证通过后总是跳转到 default-target-url属性指定的 URL -->
+		<form-login login-page="/login.html" default-target-url="/admin/index.html"
+					authentication-failure-url="/login.html" always-use-default-target="true"/>
+		<csrf disabled="true"/>
+		
+		
+		<!-- 如果你在系统中使用了框架页，需要设置框架页的策略为 SAMEORIGIN -->
+		<headers>
+			<frame-options policy="SAMEORIGIN"/>
+		</headers>
+		
+		<logout/>
+	</http>
+	
+	<!-- 认证管理器 -->
+	<authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="admin" password="admin" authorities="ROLE_ADMIN"/>
+				<user name="ly" password="admin" authorities="ROLE_ADMIN"/>
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+		
+</beans:beans>

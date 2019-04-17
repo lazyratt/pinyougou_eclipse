@@ -79,7 +79,7 @@ public class SellerController {
 	 * @return
 	 */
 	@RequestMapping("/findOne")
-	public TbSeller findOne(Long id){
+	public TbSeller findOne(String id){
 		return sellerService.findOne(id);		
 	}
 	
@@ -109,6 +109,23 @@ public class SellerController {
 	@RequestMapping("/search")
 	public PageResult search(@RequestBody TbSeller seller, int page, int rows  ){
 		return sellerService.findPage(seller, page, rows);		
+	}
+	
+	/**
+	 * 修改审核状态
+	 * @param sellerId
+	 * @param status
+	 * @return
+	 */
+	@RequestMapping("/updateStatus")
+	public Result updateStatus(String sellerId,String status){
+		try {
+			sellerService.updateStatus(sellerId, status);
+			return new Result(true, "审核修改成功"); 
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result(false, "审核修改失败");
+		}
 	}
 	
 }
