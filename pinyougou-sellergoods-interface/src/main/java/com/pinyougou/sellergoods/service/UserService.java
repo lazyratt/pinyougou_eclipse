@@ -1,8 +1,6 @@
 package com.pinyougou.sellergoods.service;
 import java.util.List;
-import java.util.Map;
-
-import com.pinyougou.pojo.TbSeller;
+import com.pinyougou.pojo.TbUser;
 
 import entity.PageResult;
 /**
@@ -10,13 +8,13 @@ import entity.PageResult;
  * @author Administrator
  *
  */
-public interface SellerService {
+public interface UserService {
 
 	/**
 	 * 返回全部列表
 	 * @return
 	 */
-	public List<TbSeller> findAll();
+	public List<TbUser> findAll();
 	
 	
 	/**
@@ -29,13 +27,13 @@ public interface SellerService {
 	/**
 	 * 增加
 	*/
-	public void add(TbSeller seller);
+	public void add(TbUser user);
 	
 	
 	/**
 	 * 修改
 	 */
-	public void update(TbSeller seller);
+	public void update(TbUser user);
 	
 
 	/**
@@ -43,7 +41,7 @@ public interface SellerService {
 	 * @param id
 	 * @return
 	 */
-	public TbSeller findOne(String id);
+	public TbUser findOne(Long id);
 	
 	
 	/**
@@ -58,12 +56,6 @@ public interface SellerService {
 	 * @param pageSize 每页记录数
 	 * @return
 	 */
-	public PageResult findPage(TbSeller seller, int pageNum,int pageSize);
+	public PageResult findPage(TbUser user, int pageNum,int pageSize);
 	
-	/**
-	 * 审核
-	 * 
-	 */
-	public void updateStatus(String sellerId,String status);
-
 }

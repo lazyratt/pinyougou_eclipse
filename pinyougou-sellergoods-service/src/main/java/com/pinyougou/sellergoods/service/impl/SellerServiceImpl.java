@@ -1,7 +1,14 @@
 package com.pinyougou.sellergoods.service.impl;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -47,7 +54,12 @@ public class SellerServiceImpl implements SellerService {
 	 */
 	@Override
 	public void add(TbSeller seller) {
+		//添加未审核状态
 		seller.setStatus("0");
+		//加密
+		BCryptPasswordEncoder bEncoder = new BCryptPasswordEncoder();
+		String password = bEncoder.encode(seller.getPassword());
+		seller.setPassword(password);
 		seller.setCreateTime(new Date());
 		sellerMapper.insert(seller);		
 	}

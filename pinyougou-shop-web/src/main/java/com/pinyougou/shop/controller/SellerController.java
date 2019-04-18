@@ -1,6 +1,9 @@
 package com.pinyougou.shop.controller;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,7 +82,7 @@ public class SellerController {
 	 * @return
 	 */
 	@RequestMapping("/findOne")
-	public TbSeller findOne(Long id){
+	public TbSeller findOne(String id){
 		return sellerService.findOne(id);		
 	}
 	
@@ -109,6 +112,15 @@ public class SellerController {
 	@RequestMapping("/search")
 	public PageResult search(@RequestBody TbSeller seller, int page, int rows  ){
 		return sellerService.findPage(seller, page, rows);		
+	}
+	
+	@RequestMapping("/loginName")
+	public Map loginName() {
+		//获取当前用户登录名
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		Map map = new HashMap<>();
+		map.put("loginName", name);
+		return map;
 	}
 	
 }
