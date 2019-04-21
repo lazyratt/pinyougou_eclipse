@@ -1,13 +1,28 @@
 package com.pinyougou.sellergoods.service.impl;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.pinyougou.mapper.TbBrandMapper;
+import com.pinyougou.mapper.TbGoodsDescMapper;
 import com.pinyougou.mapper.TbGoodsMapper;
+import com.pinyougou.mapper.TbItemCatMapper;
+import com.pinyougou.mapper.TbItemMapper;
+import com.pinyougou.mapper.TbSellerMapper;
+import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbGoodsDesc;
 import com.pinyougou.pojo.TbGoodsExample;
 import com.pinyougou.pojo.TbGoodsExample.Criteria;
+import com.pinyougou.pojo.TbItem;
+import com.pinyougou.pojo.TbItemCat;
+import com.pinyougou.pojo.TbSeller;
+import com.pinyougou.pojogroup.Goods;
 import com.pinyougou.sellergoods.service.GoodsService;
 
 import entity.PageResult;
@@ -16,13 +31,28 @@ import entity.PageResult;
  * 服务实现层
  * @author Administrator
  *
- */
+ */ 
 @Service
 public class GoodsServiceImpl implements GoodsService {
 
+	
 	@Autowired
 	private TbGoodsMapper goodsMapper;
 	
+	@Autowired
+	private TbGoodsDescMapper goodsDescMapper;
+	
+	@Autowired
+	private TbItemMapper itemMapper;
+	
+	@Autowired
+	private TbBrandMapper brandMapper;
+	
+	@Autowired
+	private TbItemCatMapper itemCatMapper;
+	
+	@Autowired
+	private TbSellerMapper sellerMapper;
 	/**
 	 * 查询全部
 	 */
@@ -45,10 +75,72 @@ public class GoodsServiceImpl implements GoodsService {
 	 * 增加
 	 */
 	@Override
-	public void add(TbGoods goods) {
-		goodsMapper.insert(goods);		
+	public void add(Goods goods) {
+		TbGoods tbGoods = goods.getTbGoods();
+		tbGoods.setAuditStatus("0");//未申请状态
+		TbGoodsDesc goodsDesc = goods.getGoodsDesc();
+	
+		//插入商品表
+		goodsMapper.insert(tbGoods);
+		
+		goodsDesc.setGoodsId(tbGoods.getId());
+		//插入商品扩展属性
+		goodsDescMapper.insert(goodsDesc);
+		
+		if ("1".equals(goods.getTbGoods().getIsEnableSpec())) {
+			for(TbItem item :goods.getItemList()) {
+				//标题
+				String title = goods.getTbGoods().getGoodsName();
+				Map<String, Object> specMap = JSON.parseObject(item.getSpec());
+				
+				for(String key:specMap.keySet()) {
+					title+=" "+specMap.get(key);
+				}
+				item.setTitle(title);
+				setItemValues(goods, item);
+				itemMapper.insert(item);
+			}
+		} else {
+			
+			TbItem item = new TbItem();
+			item.setTitle(goods.getTbGoods().getGoodsName());
+			item.setPrice(goods.getTbGoods().getPrice());
+			item.setStatus("1");
+			item.setIsDefault("1");
+			item.setNum(9999);
+			item.setSpec("{}");
+			setItemValues(goods, item);
+		}
+		
 	}
 
+	private void setItemValues(Goods goods,TbItem item) {
+		
+		//商品sku编号
+		item.setGoodsId(goods.getTbGoods().getId());
+		//商家编号
+		item.setSellerId(goods.getTbGoods().getSellerId());
+		//商品分类编号
+		item.setCategoryid(goods.getTbGoods().getCategory3Id());
+		//创建日期
+		item.setCreateTime(new Date());
+		//修改日期
+		item.setUpdateTime(new Date());
+		//品牌名称
+		TbBrand brand = brandMapper.selectByPrimaryKey(goods.getTbGoods().getBrandId());
+		item.setBrand(brand.getName());
+		//分类名称
+		TbItemCat itemCat = itemCatMapper.selectByPrimaryKey(goods.getTbGoods().getCategory3Id());
+		item.setCategory(itemCat.getName());
+		//商家名称
+		TbSeller seller = sellerMapper.selectByPrimaryKey(goods.getTbGoods().getSellerId());
+		item.setSeller(seller.getNickName());
+		//图片地址(取商品第一个图片)
+		List<Map> imageList=JSON.parseArray(goods.getGoodsDesc().getItemImages(), Map.class);
+		if (imageList.size()>0) {
+			item.setImage((String)imageList.get(0).get("url"));
+		}
+	}
 	
 	/**
 	 * 修改

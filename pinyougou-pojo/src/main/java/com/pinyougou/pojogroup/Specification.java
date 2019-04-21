@@ -1,4 +1,4 @@
-package com.pinyougou.pojigroup;
+package com.pinyougou.pojogroup;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,14 +1,12 @@
 package com.pinyougou.shop.controller;
 import java.util.List;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.pinyougou.pojo.TbGoods;
-import com.pinyougou.pojogroup.Goods;
-import com.pinyougou.sellergoods.service.GoodsService;
+import com.pinyougou.pojo.TbItemCat;
+import com.pinyougou.sellergoods.service.ItemCatService;
 
 import entity.PageResult;
 import entity.Result;
@@ -18,19 +16,19 @@ import entity.Result;
  *
  */
 @RestController
-@RequestMapping("/goods")
-public class GoodsController {
+@RequestMapping("/itemCat")
+public class ItemCatController {
 
 	@Reference
-	private GoodsService goodsService;
+	private ItemCatService itemCatService;
 	
 	/**
 	 * 返回全部列表
 	 * @return
 	 */
 	@RequestMapping("/findAll")
-	public List<TbGoods> findAll(){			
-		return goodsService.findAll();
+	public List<TbItemCat> findAll(){			
+		return itemCatService.findAll();
 	}
 	
 	
@@ -40,24 +38,18 @@ public class GoodsController {
 	 */
 	@RequestMapping("/findPage")
 	public PageResult  findPage(int page,int rows){			
-		return goodsService.findPage(page, rows);
+		return itemCatService.findPage(page, rows);
 	}
 	
 	/**
 	 * 增加
-	 * @param goods
+	 * @param itemCat
 	 * @return
 	 */
 	@RequestMapping("/add")
-	public Result add(@RequestBody Goods goods){
+	public Result add(@RequestBody TbItemCat itemCat){
 		try {
-			//获取添加商品的商家id
-			SecurityContextHolder contextHolder = new SecurityContextHolder();
-			String name = contextHolder.getContext().getAuthentication().getName();
-			//设置
-			goods.getTbGoods().setSellerId(name);
-			System.out.println(goods);
-			goodsService.add(goods);
+			itemCatService.add(itemCat);
 			return new Result(true, "增加成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -67,13 +59,13 @@ public class GoodsController {
 	
 	/**
 	 * 修改
-	 * @param goods
+	 * @param itemCat
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public Result update(@RequestBody TbGoods goods){
+	public Result update(@RequestBody TbItemCat itemCat){
 		try {
-			goodsService.update(goods);
+			itemCatService.update(itemCat);
 			return new Result(true, "修改成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,8 +79,8 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/findOne")
-	public TbGoods findOne(Long id){
-		return goodsService.findOne(id);		
+	public TbItemCat findOne(Long id){
+		return itemCatService.findOne(id);		
 	}
 	
 	/**
@@ -99,7 +91,7 @@ public class GoodsController {
 	@RequestMapping("/delete")
 	public Result delete(Long [] ids){
 		try {
-			goodsService.delete(ids);
+			itemCatService.delete(ids);
 			return new Result(true, "删除成功"); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -115,8 +107,18 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/search")
-	public PageResult search(@RequestBody TbGoods goods, int page, int rows  ){
-		return goodsService.findPage(goods, page, rows);		
+	public PageResult search(@RequestBody TbItemCat itemCat, int page, int rows  ){
+		return itemCatService.findPage(itemCat, page, rows);		
+	}
+	
+	/**
+	 * 根据上级ID查询列表
+	 * @param parentId
+	 * @return
+	 */
+	@RequestMapping("/findByParentId")
+	public List<TbItemCat> findByParentId(Long parentId){
+		return itemCatService.findByParentId(parentId);
 	}
 	
 }

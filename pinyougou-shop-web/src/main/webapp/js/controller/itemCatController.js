@@ -1,5 +1,5 @@
  //控制层 
-app.controller('itemCatController' ,function($scope,$controller   ,itemCatService){	
+app.controller('itemCatController' ,function($scope,$controller,itemCatService){	
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -110,6 +110,8 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 		} 
 		$scope.findByParentId(p_entity.id); //查询此级下级列表
 	}
+	
+	
 	
 	
 
