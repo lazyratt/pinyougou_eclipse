@@ -34,7 +34,7 @@ public interface GoodsService {
 	/**
 	 * 修改
 	 */
-	public void update(TbGoods goods);
+	public void update(Goods goods);
 	
 
 	/**
@@ -42,7 +42,7 @@ public interface GoodsService {
 	 * @param id
 	 * @return
 	 */
-	public TbGoods findOne(Long id);
+	public Goods findOne(Long id);
 	
 	
 	/**
@@ -58,5 +58,15 @@ public interface GoodsService {
 	 * @return
 	 */
 	public PageResult findPage(TbGoods goods, int pageNum,int pageSize);
+	
+	/**
+	 * 批量修改状态
+	 * @param ids
+	 * @param status
+	 */
+	public void updateStatus(Long[] ids,String status);
+
+
+	public void updateMarkeTable(Long[] ids, String status) throws Exception;
 	
 }

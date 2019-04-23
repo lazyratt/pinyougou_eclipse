@@ -71,8 +71,15 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public Result update(@RequestBody TbGoods goods){
+	public Result update(@RequestBody Goods goods){
+		//校验是否是当前商家id
+		Goods goods2 = goodsService.findOne(goods.getTbGoods().getId());
+		//如果传递过来的商家id不是登录的商家id，则属于非法操作
+		if (!goods2.getTbGoods().getSellerId().equals(goods.getTbGoods().getSellerId())) {
+			return new Result(false,"非法操作");
+		}
 		try {
+			System.out.println(goods);
 			goodsService.update(goods);
 			return new Result(true, "修改成功");
 		} catch (Exception e) {
@@ -87,7 +94,7 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/findOne")
-	public TbGoods findOne(Long id){
+	public Goods findOne(Long id){
 		return goodsService.findOne(id);		
 	}
 	
@@ -116,7 +123,45 @@ public class GoodsController {
 	 */
 	@RequestMapping("/search")
 	public PageResult search(@RequestBody TbGoods goods, int page, int rows  ){
+		//获取商家id
+		SecurityContextHolder contextHolder = new SecurityContextHolder();
+		String name = contextHolder.getContext().getAuthentication().getName();
+		goods.setSellerId(name);
+		
 		return goodsService.findPage(goods, page, rows);		
 	}
 	
+	/**
+	 * 
+	 * @param ids
+	 * @param satus
+	 * @return
+	 */
+	@RequestMapping("/updateStatus")
+	public Result updateStatus(Long[] ids,String status) {
+		try {
+			goodsService.updateStatus(ids, status);
+			return new Result(true,"审核成功");
+		} catch (Exception e) {
+			 e.printStackTrace();
+			 return new Result(false,"审核失败");
+		}
+	}
+	
+	/**
+	 * 
+	 * @param ids
+	 * @param satus
+	 * @return
+	 */
+	@RequestMapping("/updateMarkeTable")
+	public Result updateMarkeTable(Long[] ids,String status) {
+		try {
+			goodsService.updateMarkeTable(ids, status);
+			return new Result(true,"操作成功");
+		} catch (Exception e) {
+			 e.printStackTrace();
+			 return new Result(false,"操作失败");
+		}
+	}
 }
