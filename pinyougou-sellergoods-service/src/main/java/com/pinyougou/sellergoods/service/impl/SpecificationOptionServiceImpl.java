@@ -96,7 +96,8 @@ public class SpecificationOptionServiceImpl implements SpecificationOptionServic
 	
 		}
 		
-		Page<TbSpecificationOption> page= (Page<TbSpecificationOption>)specificationOptionMapper.selectByExample(example);		
+		Page<TbSpecificationOption> page= (Page<TbSpecificationOption>)specificationOptionMapper.selectByExample(example);
+		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
 	
