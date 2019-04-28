@@ -35,6 +35,7 @@ public class TbItem implements Serializable{
 
     private Date createTime;
 
+    @Field("item_updateTime")
     private Date updateTime;
 
     private String itemSn;

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.solr.common.util.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.Criteria;
@@ -32,6 +33,8 @@ import com.pinyougou.pojo.TbItem;
 import com.pinyougou.pojo.TbItemCat;
 import com.pinyougou.pojo.TbItemCatExample;
 import com.pinyougou.search.service.ItemSearchService;
+
+import net.sf.jsqlparser.expression.operators.relational.GreaterThanEquals;
 
 @Service(timeout = 5000)
 public class ItemSearchServiceImpl implements ItemSearchService {
@@ -69,9 +72,12 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 	}
 
 	// 查询高亮
-	private Map searchHighlight(Map searchMap) {
+	private Map searchList(Map searchMap) {
 		Map<String, Object> map = new HashMap<>();
-
+		
+		//关键字空格处理
+		String keywords = (String) searchMap.get("keywords");
+		searchMap.put("keywords", keywords.replaceAll(" ", ""));
 		// 查询条件
 		Criteria criteria = new Criteria("item_keywords").is(searchMap.get("keywords"));
 		HighlightQuery query = new SimpleHighlightQuery(criteria);
@@ -85,7 +91,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
 		// 设置查询条件
 		query.addCriteria(criteria);
-
+		//--------------------过滤部分----------------------------------------------------
 		// 按分类筛选
 		if (!"".equals(searchMap.get("category"))) {
 			Criteria filterCriteria = new Criteria("item_category").is(searchMap.get("category"));
@@ -107,7 +113,48 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 				query.addCriteria(filterCriteria);
 			}
 		}
-
+		//价格过滤
+		String price = (String) searchMap.get("price");
+		if (!"".equals(price)) {
+			//有价格区间
+			String[] prices = price.split("-");
+			if (!"0".equals(prices[0])) {//不是0开头的
+				Criteria fCriteria = new Criteria("item_price").greaterThanEqual(prices[0]);
+				FilterQuery filterQuery = new SimpleFilterQuery(fCriteria);
+				query.addFilterQuery(filterQuery);
+			}
+			if (!"*".equals(prices[1])) {
+				Criteria fCriteria = new Criteria("item_price").lessThanEqual(prices[1]);
+				FilterQuery filterQuery = new SimpleFilterQuery(fCriteria);
+				query.addCriteria(fCriteria);
+			}
+		}
+		//分页查询
+		Integer pageNo = (Integer) searchMap.get("pageNo");//提取页码
+		if (pageNo == null) {
+			pageNo = 1;//默认第一页
+		}
+		Integer pageSize = (Integer) searchMap.get("pageSize");//提取每页显示条数
+		if (pageSize == null) {
+			pageSize = 20;//默认显示20条
+		}
+		query.setOffset((pageNo-1)*pageSize);//从第几条数据查询
+		query.setRows(pageSize);//查询多少条记录
+		
+		//价格排序
+		String sortValue = (String) searchMap.get("sort");//排序方式
+		String sortField = (String) searchMap.get("sortField");//排序字段
+		if (sortValue !=null && sortValue.length()>0) {
+			if ("ASC".equals(sortValue)) {
+				Sort sort = new Sort(Sort.Direction.ASC,"item_"+sortField);
+				query.addSort(sort);
+			}
+			if ("DESC".equals(sortValue)) {
+				Sort sort = new Sort(Sort.Direction.DESC,"item_"+sortField);
+				query.addSort(sort);
+			}
+		}
+		//-----------------------------------------------------------------------------------------------
 		HighlightPage<TbItem> page = solrTemplate.queryForHighlightPage(query, TbItem.class);
 		List<HighlightEntry<TbItem>> highlighted = page.getHighlighted();
 		for (HighlightEntry<TbItem> entry : highlighted) {
@@ -118,6 +165,9 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 		}
 
 		map.put("rows", page.getContent());
+		
+		map.put("totalPages", page.getTotalPages());//返回总页数
+		map.put("total", page.getTotalElements());//返回总记录数
 		return map;
 	}
 
@@ -144,7 +194,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 		}
 		
 		// 2.高亮查询
-		map.putAll(searchHighlight(searchMap));
+		map.putAll(searchList(searchMap));
 		return map;
 	}
 
@@ -181,6 +231,26 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 			list.add(groupEntry.getGroupValue());
 		}
 		return list;
+	}
+
+	/**
+	 * 导入数据
+	 */
+	@Override
+	public void importList(List list) {
+		solrTemplate.saveBeans(list);
+		solrTemplate.commit();
+		
+	}
+
+	@Override
+	public void deleteList(List goodIdList) {
+		Query query = new SimpleQuery();
+		Criteria criteria = new Criteria("item_goodsid").in(goodIdList);
+		query.addCriteria(criteria);
+		solrTemplate.delete(query);
+		solrTemplate.commit();
+		
 	}
 
 }

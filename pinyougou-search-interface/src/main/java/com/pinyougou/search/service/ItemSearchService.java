@@ -14,4 +14,15 @@ public interface ItemSearchService {
 	 */
 	public Map<String, Object> search(Map search);
 	
+	/**
+	 * 导入数据
+	 * @param list
+	 */
+	public void importList(List list);
+	
+	/**
+	 * 删除数据
+	 * @param goodIdList
+	 */
+	public void deleteList(List goodIdList);
 }

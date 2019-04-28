@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbItem;
 import com.pinyougou.pojogroup.Goods;
+import com.pinyougou.search.service.ItemSearchService;
 import com.pinyougou.sellergoods.service.GoodsService;
 
 import entity.PageResult;
@@ -24,6 +26,9 @@ public class GoodsController {
 	@Reference
 	private GoodsService goodsService;
 	
+	
+	@Reference
+	private ItemSearchService itemSearchService;
 	/**
 	 * 返回全部列表
 	 * @return
@@ -158,6 +163,18 @@ public class GoodsController {
 	public Result updateMarkeTable(Long[] ids,String status) {
 		try {
 			goodsService.updateMarkeTable(ids, status);
+			List<TbItem> items = goodsService.findItemListByGoodsIds(ids, status);
+			//新增
+			if ("1".equals(status)) {
+				if (items!=null && items.size() >0) {
+					itemSearchService.importList(items);
+				}
+			}
+			//删除
+			if ("0".equals(status)) {
+				itemSearchService.deleteList(items);
+			}
+			
 			return new Result(true,"操作成功");
 		} catch (Exception e) {
 			 e.printStackTrace();

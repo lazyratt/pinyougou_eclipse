@@ -1,9 +1,12 @@
 package com.pinyougou.sellergoods.service.impl;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.dubbo.config.annotation.Service;
@@ -57,7 +60,6 @@ public class GoodsServiceImpl implements GoodsService {
 	
 	@Autowired
 	private TbSellerMapper sellerMapper;
-
 	/**
 	 * 查询全部
 	 */
@@ -276,6 +278,18 @@ public class GoodsServiceImpl implements GoodsService {
 				goodsMapper.updateByPrimaryKey(goods);
 			}
 			
+		}
+
+		@Override
+		public List<TbItem> findItemListByGoodsIds(Long[] goodsIds,String status) {
+			List<TbItem> items = new ArrayList<>();
+			if ("1".equals(status)) {
+				TbItemExample example = new TbItemExample();
+				com.pinyougou.pojo.TbItemExample.Criteria criteria = example.createCriteria();
+				criteria.andGoodsIdIn(Arrays.asList(goodsIds));
+				items.addAll(itemMapper.selectByExample(example));
+			}
+			return items;
 		}
 	
 }
