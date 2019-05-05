@@ -78,7 +78,7 @@
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -92,6 +92,12 @@
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-client</artifactId>
+			<version>5.13.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.pinyougou</groupId>
@@ -109,7 +115,7 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>

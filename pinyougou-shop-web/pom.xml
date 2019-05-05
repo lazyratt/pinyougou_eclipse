@@ -1,75 +1,77 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.pinyougou</groupId>
-    <artifactId>pinyougou-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>pinyougou-shop-web</artifactId>
-  <packaging>war</packaging>
-  
-  <dependencies>
-    <!-- Spring -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.pinyougou</groupId>
+		<artifactId>pinyougou-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>pinyougou-shop-web</artifactId>
+	<packaging>war</packaging>
+
+	<dependencies>
+		
+  	<!-- Spring -->
 	<dependency>
 		<groupId>org.springframework</groupId>
-		<artifactId>spring-context</artifactId>
+		<artifactId>spring-context</artifactId>		
 	</dependency>
 	<dependency>
 		<groupId>org.springframework</groupId>
-		<artifactId>spring-beans</artifactId>
+		<artifactId>spring-beans</artifactId>		
 	</dependency>
 	<dependency>
 		<groupId>org.springframework</groupId>
-		<artifactId>spring-webmvc</artifactId>
+		<artifactId>spring-webmvc</artifactId>		
 	</dependency>
 	<dependency>
 		<groupId>org.springframework</groupId>
-		<artifactId>spring-jdbc</artifactId>
+		<artifactId>spring-jdbc</artifactId>		
 	</dependency>
 	<dependency>
 		<groupId>org.springframework</groupId>
-		<artifactId>spring-aspects</artifactId>
+		<artifactId>spring-aspects</artifactId>		
 	</dependency>
 	<dependency>
 		<groupId>org.springframework</groupId>
-		<artifactId>spring-jms</artifactId>
+		<artifactId>spring-jms</artifactId>		
 	</dependency>
 	<dependency>
 		<groupId>org.springframework</groupId>
-		<artifactId>spring-context-support</artifactId>
+		<artifactId>spring-context-support</artifactId>		
 	</dependency>
 	<dependency>
 		<groupId>org.springframework</groupId>
-		<artifactId>spring-test</artifactId>
+		<artifactId>spring-test</artifactId>		
 	</dependency>
 	<!-- dubbo相关 -->
 	<dependency>
 		<groupId>com.alibaba</groupId>
-		<artifactId>dubbo</artifactId>
+		<artifactId>dubbo</artifactId>	
 	</dependency>
 	<dependency>
 		<groupId>org.apache.zookeeper</groupId>
-		<artifactId>zookeeper</artifactId>
+		<artifactId>zookeeper</artifactId>	
 	</dependency>
 	<dependency>
 		<groupId>com.github.sgroschupf</groupId>
-		<artifactId>zkclient</artifactId>
+		<artifactId>zkclient</artifactId>		
 	</dependency>
 	<dependency>
 		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
+		<artifactId>junit</artifactId>		
 	</dependency>
 	<dependency>
 		<groupId>com.alibaba</groupId>
-		<artifactId>fastjson</artifactId>
+		<artifactId>fastjson</artifactId>		
 	</dependency>
 	<dependency>
 		<groupId>javassist</groupId>
-		<artifactId>javassist</artifactId>
+		<artifactId>javassist</artifactId>		
 	</dependency>
 	<dependency>
 	    <groupId>commons-codec</groupId>
-	    <artifactId>commons-codec</artifactId>
+	    <artifactId>commons-codec</artifactId>	   
 	</dependency>
 	<dependency>
 		<groupId>javax.servlet</groupId>
@@ -77,56 +79,56 @@
 		<scope>provided</scope>
 	</dependency>
 	
-	<!-- 身份验证 -->
 	<dependency>
-		<groupId>org.springframework.security</groupId>
-		<artifactId>spring-security-web</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>org.springframework.security</groupId>
-		<artifactId>spring-security-config</artifactId>
-	</dependency>
+		<groupId>com.github.pagehelper</groupId>
+		<artifactId>pagehelper</artifactId>
+	</dependency>		
 
-	<dependency>
-		<groupId>com.pinyougou</groupId>
-		<artifactId>pinyougou-pojo</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
+		<!-- 身份验证 -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-client</artifactId>
+			<version>5.13.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.pinyougou</groupId>
+			<artifactId>pinyougou-pojo</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.pinyougou</groupId>
+			<artifactId>pinyougou-sellergoods-interface</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.pinyougou</groupId>
+			<artifactId>pinyougou-sellergoods-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>com.pinyougou</groupId>
+			<artifactId>pinyougou-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+	</dependencies>
 
 
-
-	<dependency>
-		<groupId>com.pinyougou</groupId>
-		<artifactId>pinyougou-sellergoods-interface</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-		<groupId>com.pinyougou</groupId>
-		<artifactId>pinyougou-sellergoods-service</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<type>war</type>
-	</dependency>
-	<dependency>
-		<groupId>com.pinyougou</groupId>
-		<artifactId>pinyougou-common</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-		<groupId>com.pinyougou</groupId>
-		<artifactId>pinyougou-search-interface</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-		<groupId>com.pinyougou</groupId>
-		<artifactId>pinyougou-page-interface</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
-  </dependencies>
-  
-  
-    <build>  
-	  <plugins>
-	      <plugin>
+	<build>
+		<plugins>
+			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
@@ -136,8 +138,8 @@
 					<!-- 请求路径 -->
 					<path>/</path>
 				</configuration>
-	  	  </plugin>
-	  </plugins>  
-    </build>
-  
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

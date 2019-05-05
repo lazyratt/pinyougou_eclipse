@@ -240,7 +240,7 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 	public void importList(List list) {
 		solrTemplate.saveBeans(list);
 		solrTemplate.commit();
-		
+		System.out.println("成功保存："+list);
 	}
 
 	@Override

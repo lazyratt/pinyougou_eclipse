@@ -8,4 +8,6 @@ public interface ItemPageService {
 	 * @return
 	 */
 	public boolean genItemHtml(Long goodsId);
+
+	boolean deleteHtml(Long goodsId);
 }

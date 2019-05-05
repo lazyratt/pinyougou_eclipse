@@ -1,11 +1,13 @@
 package com.pinyougou.page.service.impl;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
@@ -90,6 +92,23 @@ public class ItemPageServiceImpl implements ItemPageService{
 			return false;
 		}
 		
+	}
+	
+	/**
+	 * 删除静态页面
+	 * @param goodsId
+	 * @return
+	 */
+	@Override
+	public boolean deleteHtml(Long goodsId) {
+		
+		try {
+			new File(pagedir + goodsId + ".html").delete();
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
 	}
 
 }
