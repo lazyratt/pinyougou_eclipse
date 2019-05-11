@@ -23,4 +23,14 @@ app.service("cartService",function($http){
 		}
 		return totalValue;
 	}
+	
+	//获取地址列表
+	this.findAddressList=function(){
+		return $http.get("/address/findListByLoginUser.do");
+	}
+
+	//保存订单
+	this.submitOrder=function(order){
+		return $http.post("/order/add.do",order);
+	}
 });

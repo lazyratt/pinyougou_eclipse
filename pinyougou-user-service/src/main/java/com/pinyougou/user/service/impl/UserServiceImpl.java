@@ -24,7 +24,10 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.pinyougou.mapper.TbAddressMapper;
 import com.pinyougou.mapper.TbUserMapper;
+import com.pinyougou.pojo.TbAddress;
+import com.pinyougou.pojo.TbAddressExample;
 import com.pinyougou.pojo.TbUser;
 import com.pinyougou.pojo.TbUserExample;
 import com.pinyougou.pojo.TbUserExample.Criteria;
@@ -35,7 +38,7 @@ import entity.PageResult;
 /**
  * 服务实现层
  * 
- * @author Administrator
+ * 
  *
  */
 @Service
@@ -211,5 +214,7 @@ public class UserServiceImpl implements UserService {
 		}
 		return false;
 	}
+
+	
 
 }

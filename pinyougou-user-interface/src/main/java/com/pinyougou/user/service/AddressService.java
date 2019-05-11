@@ -1,8 +1,6 @@
 package com.pinyougou.user.service;
 import java.util.List;
-
 import com.pinyougou.pojo.TbAddress;
-import com.pinyougou.pojo.TbUser;
 
 import entity.PageResult;
 /**
@@ -10,13 +8,13 @@ import entity.PageResult;
  * @author Administrator
  *
  */
-public interface UserService {
+public interface AddressService {
 
 	/**
 	 * 返回全部列表
 	 * @return
 	 */
-	public List<TbUser> findAll();
+	public List<TbAddress> findAll();
 	
 	
 	/**
@@ -29,13 +27,13 @@ public interface UserService {
 	/**
 	 * 增加
 	*/
-	public void add(TbUser user);
+	public void add(TbAddress address);
 	
 	
 	/**
 	 * 修改
 	 */
-	public void update(TbUser user);
+	public void update(TbAddress address);
 	
 
 	/**
@@ -43,14 +41,14 @@ public interface UserService {
 	 * @param id
 	 * @return
 	 */
-	public TbUser findOne(Long id);
+	public TbAddress findOne(Long id);
 	
 	
 	/**
 	 * 批量删除
 	 * @param ids
 	 */
-	public void delete(Long [] ids);
+	public void delete(Long id);
 
 	/**
 	 * 分页
@@ -58,19 +56,12 @@ public interface UserService {
 	 * @param pageSize 每页记录数
 	 * @return
 	 */
-	public PageResult findPage(TbUser user, int pageNum,int pageSize);
+	public PageResult findPage(TbAddress address, int pageNum,int pageSize);
 	
 	/**
-	 * 生成验证码
-	 * @param phone
-	 */
-	public void createSmsCode(String phone);
-	
-	/**
-	 * 判断验证码是否正确
+	 * 根据用户ID查询地址
 	 * @return
 	 */
-	public boolean checkSmsCode(String phone,String code);
+	public List<TbAddress> findListByUserId(String userId);
 	
-
 }
